@@ -1,0 +1,4 @@
+{
+  "extends": ["stylelint-config-udyux/prettier"],
+  "ignoreFiles": ["reset.min.css"]
+}
