@@ -7,7 +7,7 @@
     "reset.css",
     "reset.scss"
   ],
-  "repository": "https://github.com/udyux/css-reset-udyux",
+  "repository": "https://github.com/udyux/css-reset-udyux.git",
   "author": "Nicolas Udy <dev@udy.io>",
   "license": "MIT",
   "devDependencies": {
