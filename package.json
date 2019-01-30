@@ -1,6 +1,6 @@
 {
   "name": "css-reset-udyux",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "My evolving CSS reset, drawing some inspiration from reset.css and normalize among other projects.",
   "main": "reset.min.css",
   "files": [
