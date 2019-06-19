@@ -2,14 +2,17 @@
   "name": "css-reset-udyux",
   "version": "1.0.1",
   "description": "My evolving CSS reset, drawing some inspiration from reset.css and normalize among other projects.",
-  "main": "reset.min.css",
-  "files": [
-    "reset.css",
-    "reset.scss"
-  ],
-  "repository": "https://github.com/udyux/css-reset-udyux.git",
   "author": "Nicolas Udy <dev@udy.io>",
   "license": "MIT",
+  "main": "reset.min.css",
+  "files": [
+    "reset.{css,scss}"
+  ],
+  "scripts": {
+    "publish": "node publish",
+    "prepack": "yarn build",
+    "postversion": "git push --follow-tags"
+  },
   "devDependencies": {
     "prettier": "^1.16.2",
     "stylelint": "^9.10.1",
