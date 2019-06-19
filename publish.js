@@ -1,5 +1,5 @@
 const { execSync } = require('child_process')
-const { version } = require('package.json')
+const { version } = require('./package.json')
 
 const regex = {
   keepMajorMinor: [/^(\d+\.\d+).*$/, '$1'],
@@ -19,7 +19,7 @@ const convertVersionKeyword = bumpKeyword =>
   bumpKeyword.replace(regex.versionKeywords, (...matches) => {
     const index = matches.slice(1, -2).findIndex(str => !!str)
 
-    const versionMap = currentVersion
+    const versionMap = version
       .replace(/((?:\d+\.){2}\d+).*/, '$1')
       .trim()
       .split('.')
@@ -35,23 +35,23 @@ const convertVersionKeyword = bumpKeyword =>
 
 const argumentMap = new Map(
   process.argv.slice(2).reduce((argMap, arg) => {
-    if (!argMap.length) return [arg]
+    const mappedFlag = arg.replace(regex.versionFlags, '--new-version').replace(regex.tagFlags, '--tag')
+    const parsedValue = regex.versionKeywords.test(arg) ? convertVersionKeyword(arg) : arg
     const [lastArg] = argMap.splice(-1)
 
-    const flag = Array.isArray(lastArg)
-      ? arg.replace(regex.versionFlags, '--new-version').replace(regex.tagFlags, '--tag')
-      : null
+    if (!lastArg) return [mappedFlag]
 
-    if (flag) return [...argMap, lastArg, flag]
-
-    const value = regex.versionKeywords.test(arg) ? convertVersionKeyword(version, arg) : arg
-    return [...argMap, [lastArg, value]]
+    return Array.isArray(lastArg) ? [...argMap, lastArg, mappedFlag] : [...argMap, [lastArg, parsedValue]]
   }, [])
 )
 
-const branch = execSync(`git symbolic-ref HEAD | cut -d'/' -f3,4`)
+const currentBranch = execSync(`git symbolic-ref HEAD | cut -d'/' -f3,4`)
   .toString()
   .trim()
+
+const arguments = Array.from(argumentMap)
+  .reduce((args, v) => [...args, ...v])
+  .join(' ')
 
 if (!argumentMap.has('--new-version')) {
   console.error('\nMissing version. Aborting publish...')
@@ -65,16 +65,12 @@ if (!regex.validVersion.test(argumentMap.get('--new-version'))) {
   process.exit(1)
 }
 
-if (branch !== 'master') {
+if (currentBranch !== 'master') {
   console.error('\nYou must be on branch `master`. Aborting publish...\n')
   process.exit(1)
 }
 
-const versionBranch = `version/${newVersion.replace(...regex.keepMajorMinor)}`
-
-const arguments = Array.from(argumentMap)
-  .reduce((args, v) => [...args, ...v])
-  .join(' ')
+const versionBranch = `version/${argumentMap.get('--new-version').replace(...regex.keepMajorMinor)}`
 
 execSync(`yarn publish ${arguments}`)
 
