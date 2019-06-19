@@ -50,7 +50,7 @@ const currentBranch = execSync(`git symbolic-ref HEAD | cut -d'/' -f3,4`)
   .trim()
 
 const arguments = Array.from(argumentMap)
-  .reduce((args, v) => [...args, ...v])
+  .reduce((args, v) => [...args, ...v], [])
   .join(' ')
 
 if (!argumentMap.has('--new-version')) {
