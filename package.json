@@ -1,6 +1,6 @@
 {
   "name": "css-reset-udyux",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "My evolving CSS reset, drawing some inspiration from reset.css and normalize among other projects.",
   "author": "Nicolas Udy <dev@udy.io>",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "reset.{css,scss}"
   ],
   "scripts": {
-    "publish": "node publish",
+    "release": "node release",
     "prepack": "stylelint ./*.{css,scss} --fix",
     "postversion": "git push --follow-tags"
   },

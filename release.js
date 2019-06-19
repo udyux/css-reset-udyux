@@ -54,30 +54,30 @@ const arguments = Array.from(argumentMap)
   .join(' ')
 
 if (!argumentMap.has('--new-version')) {
-  console.error('\nMissing version. Aborting publish...')
+  console.error('\nMissing version. Aborting release...')
   logVersionInfo()
   process.exit(1)
 }
 
 if (!regex.validVersion.test(argumentMap.get('--new-version'))) {
-  console.error(`\nInvalid version format. Aborting publish...`)
+  console.error(`\nInvalid version format. Aborting release...`)
   logVersionInfo()
   process.exit(1)
 }
 
 if (currentBranch !== 'master') {
-  console.error('\nYou must be on branch `master`. Aborting publish...\n')
+  console.error('\nYou must be on branch `master`. Aborting release...\n')
   process.exit(1)
 }
 
-const versionBranch = `version/${argumentMap.get('--new-version').replace(...regex.keepMajorMinor)}`
+const releaseBranch = `release/${argumentMap.get('--new-version').replace(...regex.keepMajorMinor)}`
 
 execSync(`yarn publish ${arguments}`)
 
 try {
-  execSync(`git checkout -b ${versionBranch} > /dev/null 2>&1`)
+  execSync(`git checkout -b ${releaseBranch} > /dev/null 2>&1`)
 } catch (e) {
-  execSync(`git checkout ${versionBranch} > /dev/null 2>&1`)
+  execSync(`git checkout ${releaseBranch} > /dev/null 2>&1`)
 }
 
-execSync(`git merge master && git push -u origin ${versionBranch} && git checkout master`)
+execSync(`git merge master && git push -u origin ${releaseBranch} && git checkout master`)
